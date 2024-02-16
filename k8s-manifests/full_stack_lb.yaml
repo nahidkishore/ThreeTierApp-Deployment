@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: app.trainwithshubham.com
+    - host: k8s-workshop-mainlb-4400de9971-1466282561.us-east-1.elb.amazonaws.com
       http:
         paths:
           - path: /api
