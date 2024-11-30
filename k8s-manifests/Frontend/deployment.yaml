@@ -2,11 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: workshop
+  namespace: three-tier
   labels:
     role: frontend
     env: demo
-spec:
+spec: 
   replicas: 1
   strategy:
     type: RollingUpdate
@@ -14,20 +14,21 @@ spec:
       maxSurge: 1
       maxUnavailable: 25%
   selector:
-    matchLabels:
+    matchLabels: 
       role: frontend
   template:
     metadata:
       labels:
         role: frontend
-    spec:
+    spec: 
+      imagePullSecrets:
+      - name: ecr-registry-secret
       containers:
       - name: frontend
-        image: public.ecr.aws/k4i6o4x8/three-tier-frontend:latest
+        image: public.ecr.aws/z5x8z3p6/three-tier-frontend:latest
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
-            value: "api:8080" # assuming backend service is on port 8080 
+            value: "http://workshop.nahid0002.net/api/tasks"
         ports:
         - containerPort: 3000
-       
