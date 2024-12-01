@@ -10,8 +10,7 @@
 - [Application Code](#application-code)
 - [Jenkins Pipeline Code](#jenkins-pipeline-code)
 - [Jenkins Server Terraform](#jenkins-server-terraform)
-- [Kubernetes Manifests Files](#kubernetes-manifests-files)
-- [Project Details](#project-details)
+- [Kubernetes Manifests Files](#k8s-manifests)
 
 ## Application Code
 The `Application-Code` directory contains the source code for the Three-Tier Web Application. Dive into this directory to explore the frontend and backend implementations.
@@ -65,7 +64,7 @@ aws configure
 ### Step 4: Install Docker
 ``` shell
 sudo apt-get update
-sudo apt install docker.io
+sudo apt install docker.io -y
 docker ps
 sudo chown $USER /var/run/docker.sock
 ```
@@ -87,16 +86,16 @@ eksctl version
 
 ### Step 7: Setup EKS Cluster
 ``` shell
-eksctl create cluster --name three-tier-cluster --region us-west-2 --node-type t2.medium --nodes-min 2 --nodes-max 2
-aws eks update-kubeconfig --region us-west-2 --name three-tier-cluster
+eksctl create cluster --name three-tier-cluster --region us-east-1 --node-type t2.medium --nodes-min 2 --nodes-max 3
+aws eks update-kubeconfig --region us-east-1 --name three-tier-cluster
 kubectl get nodes
 ```
 
 ### Step 8: Run Manifests
 ``` shell
 kubectl create namespace three-tier
+
 kubectl apply -f .
-kubectl delete -f .
 ```
 
 ### Step 9: Install AWS Load Balancer
@@ -114,26 +113,11 @@ helm repo add eks https://aws.github.io/eks-charts
 helm repo update eks
 helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=my-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
 kubectl get deployment -n kube-system aws-load-balancer-controller
-kubectl apply -f full_stack_lb.yaml
+kubectl apply -f ingress.yaml
 ```
 
 ### Cleanup
 - To delete the EKS cluster:
 ``` shell
-eksctl delete cluster --name three-tier-cluster --region us-west-2
+eksctl delete cluster --name three-tier-cluster --region us-east-1
 ```
-
-## Contribution Guidelines
-- Fork the repository and create your feature branch.
-- Deploy the application, adding your creative enhancements.
-- Ensure your code adheres to the project's style and contribution guidelines.
-- Submit a Pull Request with a detailed description of your changes.
-
-## Rewards
-- Successful PR merges will be eligible for exciting prizes!
-
-## Support
-For any queries or issues, please open an issue in the repository.
-
----
-Happy Learning! 🚀👨‍💻👩‍💻
